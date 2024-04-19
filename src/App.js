@@ -73,6 +73,7 @@ const handleOnDragCol = (result) => {
     (async () => {
       const result = await axios("https://api.tvmaze.com/search/shows?q=snow");
       setData(result.data);
+      setCols(cols)
     })();
   }, []);
 

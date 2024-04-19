@@ -22,7 +22,7 @@ const DraggableHeader = ({ column, index }) => {
 
 
 
-export default function Table({ columns, data,handleOnDragEndCol }) {
+export default function Table({ columns, data,handleOnDragCol }) {
   // Use the useTable Hook to send the columns and data to build the table
   const {
     getTableProps, // table props from react-table
@@ -40,7 +40,7 @@ export default function Table({ columns, data,handleOnDragEndCol }) {
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
-    <DragDropContext onDragEnd={handleOnDragEndCol}>
+    <DragDropContext onDragEnd={handleOnDragCol}>
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
