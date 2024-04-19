@@ -1,7 +1,28 @@
 import React from "react";
 import { useTable } from "react-table";
+import { DragDropContext, Draggable } from "react-beautiful-dnd";
+import { StrictModeDroppable as Droppable } from "./StrictModeDroppable";
+import { useState, useEffect } from 'react'
 
-export default function Table({ columns, data }) {
+const DraggableHeader = ({ column, index }) => {
+  return (
+    <Draggable draggableId={column.id} index={index}>
+      {(provided) => (
+        <th
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          {column.render('Header')}
+        </th>
+      )}
+    </Draggable>
+  );
+};
+
+
+
+export default function Table({ columns, data,handleOnDragEndCol }) {
   // Use the useTable Hook to send the columns and data to build the table
   const {
     getTableProps, // table props from react-table
@@ -19,16 +40,22 @@ export default function Table({ columns, data }) {
     - react-table doesn't have UI, it's headless. We just need to put the react-table props from the Hooks, and it will do its magic automatically
   */
   return (
+    <DragDropContext onDragEnd={handleOnDragEndCol}>
     <table {...getTableProps()}>
       <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
+        {headerGroups.map((headerGroup, index) => (
+          <Droppable key={index} droppableId='columns' direction="horizontal">
+            {(provided) => (
+              <tr {...headerGroup.getHeaderGroupProps()} ref={provided.innerRef} {...provided.droppableProps}>
+                {headerGroup.headers.map((column, columnIndex) => (
+                  <DraggableHeader key={column.id} column={column} index={columnIndex} />
+                ))}
+                {provided.placeholder}
+              </tr>
+            )}
+          </Droppable>
+          ))}
+        </thead>
       <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
@@ -42,5 +69,6 @@ export default function Table({ columns, data }) {
         })}
       </tbody>
     </table>
+    </DragDropContext>
   );
 }

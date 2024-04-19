@@ -51,9 +51,22 @@ function App() {
     setData(tasks)
 }
 
+const handleOnDragCol = (result) => {
+  debugger;
+  if (!result?.destination) return
+
+  const tcols = [...cols]
+
+  const [reorderedItem] = tcols.splice(result.source.index, 1)
+
+  tcols.splice(result.destination.index, 0, reorderedItem)
+  debugger;
+  setCols(tcols)
+}
 
   // data state to store the TV Maze API data. Its initial value is an empty array
   const [data, setData] = useState([]);
+  const [cols, setCols] = useState(columns || '');
 
   // Using useEffect to call the API once mounted and set the data
   useEffect(() => {
@@ -65,7 +78,7 @@ function App() {
 
   return (
     <div className="App">
-      <Table columns={columns} data={data} handleOnDragEnd={handleOnDragEnd}/>
+      <Table columns={cols} data={data} handleOnDragCol={handleOnDragCol}/>
     </div>
   );
 }
