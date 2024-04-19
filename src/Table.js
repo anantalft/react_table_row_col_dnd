@@ -1,13 +1,7 @@
 import React from "react";
 import { useTable } from "react-table";
-import { DragDropContext, Draggable } from "react-beautiful-dnd";
-import { StrictModeDroppable as Droppable } from "./StrictModeDroppable";
-import { useState, useEffect } from 'react'
 
-export default function Table({ columns, data, handleOnDragEnd }) {
-    const [items, setitems] = useState(data || [])
-
-
+export default function Table({ columns, data }) {
   // Use the useTable Hook to send the columns and data to build the table
   const {
     getTableProps, // table props from react-table
@@ -35,29 +29,18 @@ export default function Table({ columns, data, handleOnDragEnd }) {
           </tr>
         ))}
       </thead>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-                <Droppable droppableId="rows">
-                    {(provided) => (
-      <tbody {...getTableBodyProps()} {...provided.droppableProps} ref={provided.innerRef}>
+      <tbody {...getTableBodyProps()}>
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <Draggable key={i} draggableId={i.toString()} index={i}>
-                                        {(provided) => (
-                    <tr {...row.getRowProps()} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                    {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                    })}
-                    </tr>
-              )}
-              </Draggable>
+            <tr {...row.getRowProps()}>
+              {row.cells.map(cell => {
+                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+              })}
+            </tr>
           );
         })}
-         {provided.placeholder}
       </tbody>
-         )}
-         </Droppable>
-     </DragDropContext>
     </table>
   );
 }
