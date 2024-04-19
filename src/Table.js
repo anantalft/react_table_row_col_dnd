@@ -56,18 +56,27 @@ export default function Table({ columns, data,handleOnDragCol }) {
           </Droppable>
           ))}
         </thead>
-      <tbody {...getTableBodyProps()}>
+        <Droppable droppableId="rows" direction="vertical">
+                    {(provided) => (
+      <tbody {...getTableBodyProps()} {...provided.droppableProps} ref={provided.innerRef}>
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-              })}
-            </tr>
+            <Draggable key={i} draggableId={i.toString()} index={i}>
+                                        {(provided) => (
+                    <tr {...row.getRowProps()} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                    {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                    })}
+                    </tr>
+              )}
+              </Draggable>
           );
         })}
+         {provided.placeholder}
       </tbody>
+         )}
+         </Droppable>
     </table>
     </DragDropContext>
   );

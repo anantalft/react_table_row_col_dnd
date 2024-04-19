@@ -40,28 +40,36 @@ function App() {
     []
   );
  
-  const handleOnDragEnd = (result) => {
-    if (!result?.destination) return
+//   const handleOnDragEnd = (result) => {
+//     if (!result?.destination) return
 
-    const tasks = [...data]
+//     const tasks = [...data]
 
-    const [reorderedItem] = tasks.splice(result.source.index, 1)
+//     const [reorderedItem] = tasks.splice(result.source.index, 1)
 
-    tasks.splice(result.destination.index, 0, reorderedItem)
-    setData(tasks)
-}
+//     tasks.splice(result.destination.index, 0, reorderedItem)
+//     setData(tasks)
+// }
 
 const handleOnDragCol = (result) => {
-  debugger;
   if (!result?.destination) return
 
-  const tcols = [...cols]
+  if (result.destination.droppableId == 'columns'){
+    const colsD = [...cols]
 
-  const [reorderedItem] = tcols.splice(result.source.index, 1)
+      const [reorderedItem] = colsD.splice(result.source.index, 1)
 
-  tcols.splice(result.destination.index, 0, reorderedItem)
-  debugger;
-  setCols(tcols)
+      colsD.splice(result.destination.index, 0, reorderedItem)
+      setCols(colsD)
+  }else{
+    const rowsD = [...data]
+
+    const [reorderedItem] = rowsD.splice(result.source.index, 1)
+
+    rowsD.splice(result.destination.index, 0, reorderedItem)
+    setData(rowsD)
+  }
+ 
 }
 
   // data state to store the TV Maze API data. Its initial value is an empty array
